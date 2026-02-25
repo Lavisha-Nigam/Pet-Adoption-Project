@@ -1,1 +1,1 @@
-SQL scripts go in here 
+SQL codes goes in here
