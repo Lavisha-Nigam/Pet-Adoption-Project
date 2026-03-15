@@ -1,0 +1,36 @@
+CREATE TABLE Pets (
+   Pet_ID INTEGER PRIMARY KEY,
+   Name TEXT,
+   Species TEXT,
+   Breed TEXT,
+   Age INTEGER,
+   Status TEXT
+);
+
+CREATE TABLE Adopters (
+   Adopter_ID INTEGER PRIMARY KEY,
+   FirstName TEXT,
+   LastName TEXT,
+   Phone TEXT,
+   Email TEXT
+);
+
+CREATE TABLE Adoptions (
+   Adoption_ID INTEGER PRIMARY KEY,
+   Pet_ID INTEGER,
+   Adopter_ID INTEGER,
+   Adoption_Date TEXT,
+   Fee REAL,
+   FOREIGN KEY (Pet_ID) REFERENCES Pets(Pet_ID),
+   FOREIGN KEY (Adopter_ID) REFERENCES Adopters(Adopter_ID)
+);
+
+INSERT INTO Adopters (FirstName, LastName, Phone, Email) VALUES ('Lavisha', 'Nigam', '506-555-1234', 'lavishanigam@gmail.com');
+INSERT INTO Adopters (FirstName, LastName, Phone, Email) VALUES ('Junior', 'French', '506-487-8967', 'junior@Yahoo.com');
+
+
+INSERT INTO Pets (Name, Species, Breed, Age, Status) VALUES ('Cooper', 'Dog', 'Golden Retriever', 2, 'Available');
+INSERT INTO Pets (Name, Species, Breed, Age, Status) VALUES ('Misty', 'Cat', 'Siamese', 3, 'Available');
+INSERT INTO Pets (Name, Species, Breed, Age, Status) VALUES ('Luna', 'Dog', 'Husky', 1, 'Pending');
+
+INSERT INTO Adoptions (Pet_ID, Adopter_ID, Adoption_Date, Fee) VALUES (1, 1, '2026-03-15', 50.00);
