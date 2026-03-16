@@ -27,10 +27,16 @@ CREATE TABLE Adoptions (
 
 INSERT INTO Adopters (FirstName, LastName, Phone, Email) VALUES ('Lavisha', 'Nigam', '506-555-1234', 'lavishanigam@gmail.com');
 INSERT INTO Adopters (FirstName, LastName, Phone, Email) VALUES ('Junior', 'French', '506-487-8967', 'junior@Yahoo.com');
-
+INSERT INTO Adopters (FirstName, LastName, Phone, Email) VALUES ('Sarthak', 'Sharma', '506-555-8888', 'sarthak@unb.ca');
+INSERT INTO Adopters (FirstName, LastName, Phone, Email) VALUES ('Aarush', 'Gupta', '506-555-7777', 'aarushgupt@gmail.com');
 
 INSERT INTO Pets (Name, Species, Breed, Age, Status) VALUES ('Cooper', 'Dog', 'Golden Retriever', 2, 'Available');
 INSERT INTO Pets (Name, Species, Breed, Age, Status) VALUES ('Misty', 'Cat', 'Siamese', 3, 'Available');
 INSERT INTO Pets (Name, Species, Breed, Age, Status) VALUES ('Luna', 'Dog', 'Husky', 1, 'Pending');
+INSERT INTO Pets (Name, Species, Breed, Age, Status) VALUES ('Oliver', 'Cat', 'Tabby', 5, 'Adopted');
+INSERT INTO Pets (Name, Species, Breed, Age, Status) VALUES ('Bella', 'Dog', 'Beagle', 3, 'Available');
+INSERT INTO Pets (Name, Species, Breed, Age, Status) VALUES ('Simba', 'Cat', 'Maine Coon', 2, 'Adopted');
 
 INSERT INTO Adoptions (Pet_ID, Adopter_ID, Adoption_Date, Fee) VALUES (1, 1, '2026-03-15', 50.00);
+INSERT INTO Adoptions (Pet_ID, Adopter_ID, Adoption_Date, Fee) VALUES (2, 2, '2026-03-10', 75.00);
+INSERT INTO Adoptions (Pet_ID, Adopter_ID, Adoption_Date, Fee) VALUES (4, 3, '2026-03-12', 60.00);
