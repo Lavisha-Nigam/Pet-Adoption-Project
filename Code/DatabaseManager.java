@@ -6,6 +6,7 @@
  * @version Project Work
  */
 
+import java.util.Scanner;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -19,17 +20,41 @@ public class DatabaseManager
     
     //Crreating tables if the file is empty
     public static void createTables() {
-        String sql = "CREATE TABLE IF NOT EXISTS Pets (" + "Pet_ID INTEGER PRIMARY KEY, " +
-        "Name TEXT, Species TEXT, Breed TEXT, Age INTEGER, Status TEXT);";
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-        Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-            System.out.println ("Tables checked/created." );
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    // 1. Create Pets Table
+    String sqlPets = "CREATE TABLE IF NOT EXISTS Pets (" +
+                     "Pet_ID INTEGER PRIMARY KEY, " +
+                     "Name TEXT, Species TEXT, Breed TEXT, " +
+                     "Age INTEGER, Status TEXT);";
+
+    // 2. Create Adopters Table
+    String sqlAdopters = "CREATE TABLE IF NOT EXISTS Adopters (" +
+                         "Adopter_ID INTEGER PRIMARY KEY, " +
+                         "FirstName TEXT, LastName TEXT, " +
+                         "Phone TEXT, Email TEXT);";
+
+    // 3. Create Adoptions Table (Created last because of Foreign Keys)
+    String sqlAdoptions = "CREATE TABLE IF NOT EXISTS Adoptions (" +
+                          "Adoption_ID INTEGER PRIMARY KEY, " +
+                          "Pet_ID INTEGER, Adopter_ID INTEGER, " +
+                          "Adoption_Date TEXT, Fee REAL, " +
+                          "FOREIGN KEY (Pet_ID) REFERENCES Pets(Pet_ID), " +
+                          "FOREIGN KEY (Adopter_ID) REFERENCES Adopters(Adopter_ID));";
+
+    try (Connection conn = DriverManager.getConnection(DB_URL);
+         Statement stmt = conn.createStatement()) {
+        
+        // Execute all three commands
+        stmt.execute(sqlPets);
+        stmt.execute(sqlAdopters);
+        stmt.execute(sqlAdoptions);
+        
+        System.out.println("All tables (Pets, Adopters, Adoptions) checked/created.");
+        
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+}
+   
     
     public static void showAllPets() {
         String sql = "SELECT * FROM Pets";
@@ -79,6 +104,7 @@ public class DatabaseManager
         e.printStackTrace();
     }
 }
+    //Method to delete a pet 
     public static void deletePet(int id) {
         String sql = "DELETE FROM Pets WHERE Pet_ID = ?";
          try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -91,12 +117,57 @@ public class DatabaseManager
                 e.printStackTrace();
             }
     }
+    
     public static void main(String[]args) {
         createTables(); //checking the schema
-        deletePet(2);
+        deletePet(9);
         addPet("Lily", "Cat", "Persian", 2, "Available"); //Inserting a new pet
         showAllPets(); // Show the schema results (Select)
     }
+
+public static void searchAndBook() {
+    Scanner input = new Scanner(System.in);
+    
+    System.out.println("--- Welcome to PetConnect Search ---");
+    System.out.print("Enter the species you are looking for: ");
+    String desiredBreed = input.nextLine();
+
+    // Search Logic
+    String searchSql = "SELECT * FROM Pets WHERE Species = ? AND Status = 'Available'";
+    
+    try (Connection conn = DriverManager.getConnection(DB_URL);
+         PreparedStatement pstmt = conn.prepareStatement(searchSql)) {
+        
+        pstmt.setString(1, desiredBreed);
+        ResultSet rs = pstmt.executeQuery();
+
+        System.out.println("\nResults for " + desiredBreed + ":");
+        boolean found = false;
+       while (rs.next()) {
+    found = true;
+    int id = rs.getInt("Pet_ID");
+    String name = rs.getString("Name");
+    String breed = rs.getString("Breed"); // <--- Get the breed column
+    
+    System.out.println("ID: " + id + " | Name: " + name + " | Breed: " + breed);
+    }
+
+        if (!found) {
+            System.out.println("Sorry, no " + desiredBreed + "s available right now.");
+        } else {
+            // Booking Logic
+            System.out.print("\nEnter the ID of the pet you'd like to book a visit for: ");
+            int idToBook = input.nextInt();
+            
+            // Re-use your updatePetStatus method here!
+            updatePetStatus(idToBook, "Pending");
+            System.out.println("Success! Visit booked. Pet status updated to Pending.");
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
 }
     
    
