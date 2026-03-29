@@ -55,7 +55,7 @@ public class DatabaseManager
     }
 }
    
-    
+    //To show all pets (SELECT)
     public static void showAllPets() {
         String sql = "SELECT * FROM Pets";
         
@@ -120,54 +120,73 @@ public class DatabaseManager
     
     public static void main(String[]args) {
         createTables(); //checking the schema
-        deletePet(9);
-        addPet("Lily", "Cat", "Persian", 2, "Available"); //Inserting a new pet
-        showAllPets(); // Show the schema results (Select)
-    }
+        deletePet(9);                                     //Sample statement for deleting lily 
+        addPet("Lily", "Cat", "Persian", 2, "Available"); //and then adding her back
+        
+        addPet("Iggy", "Reptile", "Iguana", 3, "Available");  // Reptiles (The "Iguana" suggestion)
+        addPet("Slinky", "Reptile", "Ball Python", 2, "Available");
 
-public static void searchAndBook() {
+        addPet("Jumper", "Amphibian", "Bullfrog", 1, "Available"); // Amphibians
+        addPet("Axel", "Amphibian", "Axolotl", 1, "Available");
+
+        addPet("Cheeks", "Small Mammal", "Hamster", 1, "Available");  // Small Mammals
+        addPet("Shadow", "Small Mammal", "Sugar Glider", 2, "Available");
+        showAllPets(); // Show the schema results (Select)
+
+        }
+
+        public static void searchAndBook() {
     Scanner input = new Scanner(System.in);
     
     System.out.println("--- Welcome to PetConnect Search ---");
-    System.out.print("Enter the species you are looking for: ");
-    String desiredBreed = input.nextLine();
+    System.out.print("Enter a species (e.g. Reptile) or a breed (e.g. Iguana): ");
+    String userInput = input.nextLine();
 
-    // Search Logic
-    String searchSql = "SELECT * FROM Pets WHERE Species = ? AND Status = 'Available'";
+    // The updated SQL query that checks TWO columns so that they can search either the breed or the species  
+    // e.g. if they search reptile or iguana they will get iguana in the list 
+    
+    String searchSql = "SELECT * FROM Pets WHERE (Species = ? OR Breed = ?) AND Status = 'Available'";
     
     try (Connection conn = DriverManager.getConnection(DB_URL);
          PreparedStatement pstmt = conn.prepareStatement(searchSql)) {
         
-        pstmt.setString(1, desiredBreed);
+        // setting user's input for both question marks 
+        pstmt.setString(1, userInput); 
+        pstmt.setString(2, userInput);
+        
         ResultSet rs = pstmt.executeQuery();
 
-        System.out.println("\nResults for " + desiredBreed + ":");
+        System.out.println("\nResults for \"" + userInput + "\":");
         boolean found = false;
-       while (rs.next()) {
-    found = true;
-    int id = rs.getInt("Pet_ID");
-    String name = rs.getString("Name");
-    String breed = rs.getString("Breed"); // <--- Get the breed column
-    
-    System.out.println("ID: " + id + " | Name: " + name + " | Breed: " + breed);
-    }
+        while (rs.next()) {
+            found = true;
+            int id = rs.getInt("Pet_ID");
+            String name = rs.getString("Name");
+            String species = rs.getString("Species");
+            String breed = rs.getString("Breed");
+            
+            System.out.println("ID: " + id + " | Name: " + name + " | " + species + " (" + breed + ")");
+        }
 
         if (!found) {
-            System.out.println("Sorry, no " + desiredBreed + "s available right now.");
+            System.out.println("Sorry, no matches found for \"" + userInput + "\" right now.");
         } else {
             // Booking Logic
             System.out.print("\nEnter the ID of the pet you'd like to book a visit for: ");
             int idToBook = input.nextInt();
             
-            // Re-use your updatePetStatus method here!
+            // Re-using updatePetStatus method
             updatePetStatus(idToBook, "Pending");
             System.out.println("Success! Visit booked. Pet status updated to Pending.");
         }
-
     } catch (SQLException e) {
         e.printStackTrace();
     }
 }
 }
+
+
+
+
     
    
