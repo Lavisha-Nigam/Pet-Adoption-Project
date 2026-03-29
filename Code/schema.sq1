@@ -25,6 +25,8 @@ CREATE TABLE Adoptions (
    FOREIGN KEY (Adopter_ID) REFERENCES Adopters(Adopter_ID)
 );
 
+//Theses are sample insert statemnets 
+
 INSERT INTO Adopters (FirstName, LastName, Phone, Email) VALUES ('Lavisha', 'Nigam', '506-555-1234', 'lavishanigam@gmail.com');
 INSERT INTO Adopters (FirstName, LastName, Phone, Email) VALUES ('Junior', 'French', '506-487-8967', 'junior@Yahoo.com');
 INSERT INTO Adopters (FirstName, LastName, Phone, Email) VALUES ('Sarthak', 'Sharma', '506-555-8888', 'sarthak@unb.ca');
